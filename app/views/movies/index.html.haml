@@ -4,7 +4,7 @@
 %table#movies
   %thead
     %tr
-      %th Movie Title
+      %th{:class => @color}= link_to "Movie Title", {:sortby => "title"}
       %th Rating
       %th Release Date
       %th More Info

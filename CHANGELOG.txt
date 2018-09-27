@@ -1,0 +1,3 @@
+Changes Made:
+  9/27 - Added link to sort movies in index.html.haml
+  9/27 - Changed "index" method in movies_controller to order list if it receives :sortby => 'title'

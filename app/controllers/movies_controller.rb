@@ -11,6 +11,12 @@ class MoviesController < ApplicationController
   end
 
   def index
+    sorted = params[:sortby]
+    if sorted == 'title'
+      @movies = Movie.all.order(:title)
+      @color = "hilite"
+      return 
+    end
     @movies = Movie.all
   end
 
