@@ -14,7 +14,7 @@ class MoviesController < ApplicationController
 
     # Get all movies
     @movies = Movie.all
-    @all_ratings = ['G','PG','PG-13','R', 'NC-17']
+    @all_ratings = Movie.ratings()
     @checked_ratings = @all_ratings
     @direct = 0
 
