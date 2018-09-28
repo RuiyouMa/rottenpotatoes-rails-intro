@@ -11,9 +11,9 @@
 %table#movies
   %thead
     %tr
-      %th{:class => @title}= link_to "Movie Title", {:sortby => "title"}
+      %th{:class => ('hilite' if @sortby == 'title')}= link_to "Movie Title", {:sortby => "title"}
       %th Rating
-      %th{:class => @release}= link_to "Release Date", {:sortby => "date"}
+      %th{:class => ('hilite' if @sortby == 'release_date')}= link_to "Release Date", {:sortby => "release_date"}
       %th More Info
   %tbody
     - @movies.each do |movie|

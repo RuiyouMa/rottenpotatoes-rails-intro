@@ -11,26 +11,54 @@ class MoviesController < ApplicationController
   end
 
   def index
-    sorted = params[:sortby]
-    certain_ratings = params[:ratings]
-    if sorted == 'title'
-      @movies = Movie.all.order(:title)
-      @title = "hilite" 
-    elsif sorted == 'date'
-      @movies = Movie.all.order(:release_date)
-      @release = "hilite"
-    elsif !certain_ratings.nil?
-      @movies = Movie.where(rating: certain_ratings.keys)
-    else 
-      @movies = Movie.all
+
+    # Get all movies
+    @movies = Movie.all
+    @all_ratings = ['G','PG','PG-13','R', 'NC-17']
+    @checked_ratings = @all_ratings
+    @direct = 0
+
+    # Remove based on unchecked ratings
+    if !params[:ratings].nil?
+      @movies = Movie.where(rating: params[:ratings].keys)
+      @checked_ratings = params[:ratings].keys
+      session[:ratings] = params[:ratings]
+    elsif session.has_key?(:ratings)
+      @movies = Movie.where(rating: session[:ratings].keys)
+      @checked_ratings = session[:ratings].keys
+      params[:ratings] = session[:ratings]
+      @direct = 1
     end
     
-    @all_ratings = ['G','PG','PG-13','R', 'NC-17']
-    if !params[:ratings].nil?
-      @checked_ratings = certain_ratings.keys
-    else 
-      @checked_ratings = @all_ratings
-    end 
+    # Sort based on status
+    if params.has_key?(:sortby)
+      if params[:sortby] == 'title'
+        @movies = @movies.order(:title)
+        @sortby = 'title'
+      elsif params[:sortby] == 'release_date'
+        @movies = @movies.order(:release_date)
+        @sortby = 'release_date'
+      end
+      session[:sortby] = params[:sortby]
+    elsif session.has_key?(:sortby)
+      if session[:sortby] == 'title'
+        @movies = @movies.order(:title)
+        @sortby = 'title'
+      elsif session[:sortby] == 'release_date'
+        @movies = @movies.order(:release_date)
+        @sortby = 'release_date'
+      end
+      params[:sortby] = session[:sortby]
+      @direct = 1
+    end  
+     
+    # Redirect to appropriate link
+    if @direct == 1
+      flash.keep
+      redirect_to movies_path(:sortby => params[:sortby], :ratings => params[:ratings]) 
+    end
+
+    
     
   end
 
